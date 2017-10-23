@@ -1,0 +1,404 @@
+{
+  "openapi": "3.0.0",
+  "servers": [],
+  "info": {
+    "description":
+      "Provide service to query and monitor campsites, when it is available notify  you",
+    "version": "1.0.0",
+    "title": "Campsites Worker",
+    "contact": { "email": "shaokexu@gmail.com" },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    { "name": "parks", "description": "park information" },
+    { "name": "campsites", "description": "campsite information" },
+    {
+      "name": "reservations",
+      "description": "campsite reservation information"
+    }
+  ],
+  "paths": {
+    "/parks": {
+      "get": {
+        "tags": ["parks"],
+        "summary": "get all monitor parks",
+        "operationId": "getParks",
+        "description": "Get all monitor parks information\n",
+        "responses": {
+          "200": {
+            "description": "parks information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#components/schemas/ParkBaseItem" }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error payload",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorModel" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parks/findByNames": {
+      "get": {
+        "tags": ["parks"],
+        "summary": "get parks information by names",
+        "operationId": "getParksByName",
+        "parameters": [
+          {
+            "name": "names",
+            "in": "query",
+            "required": true,
+            "description": "park names that want to be searched",
+            "schema": { "type": "array", "items": { "type": "string" } }
+          }
+        ],
+        "description": "Get parks information by names\n",
+        "responses": {
+          "200": {
+            "description": "parks information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#components/schemas/ParkItem" }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error payload",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorModel" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parks/{parkId}": {
+      "get": {
+        "tags": ["parks"],
+        "summary": "get a park information",
+        "operationId": "getParkById",
+        "description": "get a park information by park id",
+        "parameters": [
+          {
+            "name": "parkId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "a park information",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#components/schemas/ParkItem" }
+              }
+            }
+          },
+          "default": {
+            "description": "error payload",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorModel" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campsites": {
+      "get": {
+        "tags": ["campsites"],
+        "summary": "get all campsites",
+        "operationId": "getCampsites",
+        "description": "get all scrawl campsites",
+        "responses": {
+          "200": {
+            "description": "campsites information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#components/schemas/CampsiteBaseItem" }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error payload",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorModel" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campsites/{siteId}": {
+      "get": {
+        "tags": ["campsites"],
+        "summary": "get campsit by site id",
+        "operationId": "getCampsitById",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get a campsite information by site id",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#components/schemas/CampsiteItem" }
+              }
+            }
+          },
+          "default": {
+            "description": "error payload",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorModel" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/filter": {
+      "get": {
+        "tags": ["reservations"],
+        "summary": "filter reservations",
+        "operationId": "filterReservations",
+        "description": "Filter reservations by condition",
+        "parameters": [
+          {
+            "name": "parkId",
+            "in": "query",
+            "description": "park id",
+            "required": false,
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "contractCode",
+            "in": "query",
+            "description": "contract code",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "siteId",
+            "in": "query",
+            "description": "campsite id",
+            "required": false,
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "weekday",
+            "in": "query",
+            "description": "weekday",
+            "required": false,
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": false,
+            "schema": { "type": "string", "enum": ["a", "x", "r"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "find reservations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#components/schemas/ReservationItem" }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error payload",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorModel" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorModel": {
+        "type": "object",
+        "required": ["message", "code"],
+        "properties": {
+          "message": { "type": "string" },
+          "code": { "type": "integer", "minimum": 100, "maximum": 600 }
+        }
+      },
+      "MongoDBItem": {
+        "type": "object",
+        "required": ["_id"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "mongodb added property",
+            "example": "655::ca"
+          }
+        }
+      },
+      "ParkBaseItem": {
+        "allOf": [
+          { "$ref": "#components/schemas/MongoDBItem" },
+          {
+            "type": "object",
+            "required": ["parkId", "contractCode", "name"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "park name",
+                "example": "Big Basin Redwoods SP"
+              },
+              "parkId": {
+                "type": "integer",
+                "description": "park id",
+                "example": 655
+              },
+              "contractCode": {
+                "type": "string",
+                "description": "normally is state short name",
+                "example": "ca"
+              }
+            }
+          }
+        ]
+      },
+      "CampsiteBaseItem": {
+        "allOf": [
+          { "$ref": "#components/schemas/ParkBaseItem" },
+          {
+            "type": "object",
+            "required": ["siteId", "name"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "campsite name",
+                "example": "Campsite #24FT"
+              },
+              "siteId": {
+                "type": "integer",
+                "description": "campsite id",
+                "example": 40009
+              }
+            }
+          }
+        ]
+      },
+      "ParkItem": {
+        "allOf": [
+          { "$ref": "#components/schemas/ParkBaseItem" },
+          {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "url,",
+                "description": "park's url"
+              },
+              "services": {
+                "type": "array",
+                "description": "this park provides services",
+                "items": { "type": "string", "example": "Bicycling" }
+              }
+            }
+          }
+        ]
+      },
+      "CampsiteItem": {
+        "allOf": [
+          { "$ref": "#components/schemas/CampsiteBaseItem" },
+          {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "url,",
+                "description": "campsite book url"
+              },
+              "facilityId": {
+                "type": "integer",
+                "description":
+                  "In reserve california, each campsite belong to a facility. This is the id of facility",
+                "example": 436
+              },
+              "detail": {
+                "type": "object",
+                "description":
+                  "This campsite provides services. If this services isn't in the known list, then it is stored in unknown list",
+                "required": ["unknown"],
+                "properties": { "unknown": { "type": "object" } }
+              }
+            }
+          }
+        ]
+      },
+      "ReservationItem": {
+        "allOf": [
+          { "$ref": "#components/schemas/CampsiteBaseItem" },
+          {
+            "type": "object",
+            "required": ["date", "weekday", "lastModified", "status"],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date",
+                "example": "12/28/2017"
+              },
+              "weekday": {
+                "type": "integer",
+                "description": "week day. 0 means monday, 6 means sunday",
+                "enum": [0, 1, 2, 3, 4, 5, 6]
+              },
+              "lastModified": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2017-09-30T19:00:28.393730"
+              },
+              "status": { "type": "string", "enum": ["r", "a", "x"] },
+              "url": {
+                "type": "string",
+                "format": "url",
+                "description": "book url"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+  Shaoke -- Founder
+
+# THANKS
+
+  React Starter Kit
+
+# TECHNOLOGY COLOPHON
+
+  CSS3, HTML5, JavaScript, NodeJS,
+  Based on React Starter Kit -- https://reactstarter.com/
